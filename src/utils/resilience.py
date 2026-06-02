@@ -39,7 +39,7 @@ class CircuitBreaker:
             self.last_failure_time = datetime.now()
             self.state = "OPEN"
         elif self.state == "CLOSED":
-            if self.failure_count > self.failure_threshold:
+            if self.failure_count >= self.failure_threshold:
                 self.state = "OPEN"
                 self.last_failure_time = datetime.now()
     def record_success(self):

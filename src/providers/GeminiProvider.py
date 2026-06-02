@@ -2,8 +2,8 @@ import os
 from google import genai
 from google.genai import types
 from google.genai.errors import APIError
-from AIProviders.interfaces.AIAssistantProvider import AIAssistantProvider
-from lib.functions import emails_verify
+from src.tools.AIAssistantProvider import AIAssistantProvider
+from src.tools.functions.emails_verify import emails_verify
 
 
 class AIProviderError(Exception):
@@ -39,18 +39,19 @@ class GeminiClient(AIAssistantProvider):
             )
 
             tool_call = response.candidates[0].content.parts[0].function_call
-            if tool_call.name == "emails_verify":
-                print(tool_call.args)
-                result = emails_verify(**tool_call.args)
+            if tool_call is not None:
+                if tool_call.name == "emails_verify":
+                    print(tool_call.args)
+                    result = emails_verify(**tool_call.args)
 
-                function_response_part = types.Part.from_function_response(
-                    name=tool_call.name,
-                    response={"result": result},
-                )
+                    function_response_part = types.Part.from_function_response(
+                        name=tool_call.name,
+                        response={"result": result},
+                    )
 
-                contents.append(response.candidates[0].content)  # Append the content from the model's response.
-                contents.append(
-                    types.Content(role="user", parts=[function_response_part]))  # Append the function response
+                    contents.append(response.candidates[0].content)  # Append the content from the model's response.
+                    contents.append(
+                        types.Content(role="user", parts=[function_response_part]))  # Append the function response
 
                 client = genai.Client()
                 final_response = client.models.generate_content(

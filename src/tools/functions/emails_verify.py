@@ -18,7 +18,7 @@ emails_verify_function = {
 }
 
 def emails_verify(days: int):
-    abs_working_dir = os.path.abspath('./lib/aurinko_dummy_response.json')
+    abs_working_dir = os.path.abspath('./db/aurinko_dummy_response.json')
     with open(abs_working_dir, 'r', encoding='utf-8') as file:
         emails = json.load(file)
     current_date =  "2026-05-29"

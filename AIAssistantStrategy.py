@@ -1,9 +1,8 @@
 from enum import Enum
-from AIProviders.OpenAIProvider import OpenAIClient
-from AIProviders.GeminiProvider import GeminiClient
-from lib.functions import get_functions_declarations
+from src.providers.OpenAIProvider import OpenAIClient
+from src.providers.GeminiProvider import GeminiClient
+from src.tools.functions.emails_verify import get_functions_declarations
 
-from AIProviders.interfaces.AIAssistantProvider import AIAssistantProvider
 
 class AIProviderType(Enum):
     OPENAI = "openai"

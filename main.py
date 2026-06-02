@@ -9,12 +9,13 @@ responde adequadamente de acordo com sua funcao atual
 """
 
 from AIAssistantStrategy import AIAssistant, AIProviderType
-from AIProviders.GeminiProvider import AIProviderError
+from src.providers.GeminiProvider import AIProviderError
 
 
 def main() -> None:
     aiassistant = AIAssistant()
-    prompt = "Eu quero saber sobre os emails que eu recebi desde de a ultima quinta-feira"
+    #prompt = "Eu quero saber sobre os emails que eu recebi desde de a ultima quinta-feira, selecione apenas os emails que precisam de alguma acao, e me sugira uma acao necessaria para cada um deles"
+    prompt = "me explique como a ia funciona em poucas palavras "
     try:
 
        aiassistant.set_provider(AIProviderType.GEMINI)

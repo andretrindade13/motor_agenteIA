@@ -1,6 +1,6 @@
 import os
 from openai import OpenAI, APIError
-from AIProviders.interfaces.AIAssistantProvider import AIAssistantProvider
+from src.tools.AIAssistantProvider import AIAssistantProvider
 
 class AIProviderError(Exception):
     """Exceção genérica para erros de provedor de IA."""

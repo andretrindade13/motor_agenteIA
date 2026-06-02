@@ -4,8 +4,9 @@ from google.genai import types
 from google.genai.errors import APIError
 from src.tools.AIAssistantProvider import AIAssistantProvider
 from src.tools.functions.emails_verify import emails_verify
+from src.utils.resilience import CircuitBreaker
 
-
+breaker = CircuitBreaker(failure_threshold= 3, recovery_timeout=10)
 class AIProviderError(Exception):
     """Exceção genérica para erros de provedor de IA."""
     pass
@@ -24,6 +25,7 @@ class GeminiClient(AIAssistantProvider):
             tools = types.Tool(function_declarations=self.functions)
             self.config = types.GenerateContentConfig(tools=[tools])
 
+    @breaker
     def generate_response(self, prompt: str) -> str | None:
 
         contents = [
@@ -53,7 +55,7 @@ class GeminiClient(AIAssistantProvider):
                     contents.append(
                         types.Content(role="user", parts=[function_response_part]))  # Append the function response
 
-                client = genai.Client()
+                client = self.client
                 final_response = client.models.generate_content(
                     model=self.model,
                     config=self.config,
@@ -62,6 +64,6 @@ class GeminiClient(AIAssistantProvider):
                 return final_response.text
             return response.text
         except APIError as e:
-            print(f"Erro na API do Gemini: {e}")
+            raise e
         except Exception as e:
-            print(f"Erro inesperado: {e}")
+            raise e

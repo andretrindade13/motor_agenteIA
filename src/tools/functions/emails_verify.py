@@ -1,6 +1,9 @@
 import json
 import datetime
 import os
+from src.utils.resilience import CircuitBreaker
+
+breaker = CircuitBreaker(failure_threshold= 3, recovery_timeout=10)
 
 emails_verify_function = {
     "name": "emails_verify",
@@ -17,8 +20,9 @@ emails_verify_function = {
     },
 }
 
+@breaker
 def emails_verify(days: int):
-    abs_working_dir = os.path.abspath('./db/aurinko_dummy_response.json')
+    abs_working_dir = os.path.abspath('./src/db/aurinko_dummy_response.json')
     with open(abs_working_dir, 'r', encoding='utf-8') as file:
         emails = json.load(file)
     current_date =  "2026-05-29"
